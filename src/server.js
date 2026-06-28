@@ -1,4 +1,5 @@
 import express from 'express';
+import { cacheData, getCachedData } from './cache.js';
 
 export default function CachingProxy() {
   const app = express();
@@ -7,12 +8,21 @@ export default function CachingProxy() {
   function start(options) {
     app.get('/*any', async (req, res) => {
       try {
-        const response = await fetch(`${options.url}${req.url}`);
-        const data = await response.json();
+        const cache = await getCachedData(`${options.url}${req.url}`);
 
-        res.status(response.status).json(data);
+        if (!cache) {
+          const response = await fetch(`${options.url}${req.url}`);
+          const data = await response.json();
+
+          await cacheData(`${options.url}${req.url}`, data);
+          res.set('X-Cache', 'MISS');
+          return res.status(response.status).json(data);
+        }
+
+        res.set('X-Cache', 'HIT');
+        res.status(200).json(cache);
       } catch (error) {
-        res.status(500).json({ error: `Error requesting: ${this.url}${req.path}` });
+        res.status(500).json({ error: `Error requesting: ${options.url}${req.url}` });
       }
     });
 

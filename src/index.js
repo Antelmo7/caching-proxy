@@ -1,6 +1,9 @@
 #!/usr/bin/env node
+
+import 'dotenv/config'
 import { Command } from "commander";
 import CachingProxy from './server.js';
+import { clearCache } from './cache.js';
 const program = new Command();
 
 const server = CachingProxy();
@@ -15,5 +18,11 @@ program.command('start')
   .option('-p, --port <integer>', 'Port for the caching proxy server')
   .option('-u, --url <string>', 'URL to forward requests to')
   .action(server.start);
+
+program.command('clear-cache')
+  .description('Clear the cache')
+  .action(async () => {
+    await clearCache();
+  });
 
 program.parse();
