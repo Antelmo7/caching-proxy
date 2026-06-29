@@ -6,6 +6,9 @@
   "bugs": {
     "url": "https://github.com/Antelmo7/caching-proxy/issues"
   },
+  "bin": {
+    "caching-proxy": "src/index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Antelmo7/caching-proxy.git"

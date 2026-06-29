@@ -19,7 +19,7 @@ program.command('start')
   .option('-u, --url <string>', 'URL to forward requests to')
   .action(server.start);
 
-program.command('clear-cache')
+program.command('clear')
   .description('Clear the cache')
   .action(async () => {
     await clearCache();
