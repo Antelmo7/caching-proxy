@@ -4,6 +4,7 @@ import { cacheData, getCachedData } from './cache.js';
 export default function CachingProxy() {
   const app = express();
   app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
   function start(options) {
     app.get('/*any', async (req, res) => {
